@@ -8,20 +8,26 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'mvn clean package -DskipTests'
+                dir('demo-java-app') {
+                    sh 'mvn clean package -DskipTests'
+                }
             }
         }
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonarqube') {
-                    sh 'mvn sonar:sonar'
+                dir('demo-java-app') {
+                    withSonarQubeEnv('sonarqube') {
+                        sh 'mvn sonar:sonar'
+                    }
                 }
             }
         }
         stage('Docker Build & Push') {
             steps {
-                sh 'docker build -t Lucaju13/demo-java-app:v1.0 .'
-                sh 'docker push Lucaju13/demo-java-app:v1.0'
+                dir('demo-java-app') {
+                    sh 'docker build -t Lucaju13/demo-java-app:v1.0 .'
+                    sh 'docker push Lucaju13/demo-java-app:v1.0'
+                }
             }
         }
     }
