@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKERHUB_PASSWORD = credentials('dockerhub-credentials')
+        DOCKERHUB_CREDS = credentials('dockerhub-credentials')
     }
     stages {
         stage('Checkout') {
@@ -29,7 +29,7 @@ pipeline {
             steps {
                 dir('demo-java-app') {
                     sh 'docker build -t lucaju13/demo-java-app:v1.0 .'
-                    sh 'docker login -u lucaju13 -p ${DOCKERHUB_PASSWORD}'
+                    sh 'echo $DOCKERHUB_CREDS_PSW | docker login -u $DOCKERHUB_CREDS_USR --password-stdin'
                     sh 'docker push lucaju13/demo-java-app:v1.0'
                 }
             }
