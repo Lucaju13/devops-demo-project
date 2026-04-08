@@ -37,11 +37,12 @@ pipeline {
         }
         stage('Update values.yaml') {
             steps {
+                sh 'git checkout main'
                 sh "sed -i 's/tag:.*/tag: v1.0/' helm/app/values.yaml"
                 sh 'git config user.email "jenkins@ci.com"'
                 sh 'git config user.name "Jenkins"'
                 sh 'git add helm/app/values.yaml'
-                sh 'git commit -m "Update image tag to v1.0"'
+                sh 'git diff --cached --quiet || git commit -m "Update image tag to v1.0"'
                 sh 'git push https://$GITHUB_TOKEN_USR:$GITHUB_TOKEN_PSW@github.com/Lucaju13/devops-demo-project main'
             }
         }
